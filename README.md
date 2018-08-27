@@ -25,10 +25,7 @@ import openweathermap
 - All procs should return an JSON Object `JsonNode`.
 - The naming of the procs follows the naming on the OWM Wiki.
 - The errors on the procs follows the errors on the OWM Wiki.
-- API Calls that use HTTP `GET` start with `get_*`.
-- API Calls that use HTTP `POST` start with `post_*`.
-- API Calls that use HTTP `PUT` start with `put_*`.
-- API Calls that use HTTP `DELETE` start with `delete_*`.
+- API Calls are HTTP `GET`.
 - API Calls use [the DoNotTrack HTTP Header.](https://en.wikipedia.org/wiki/Do_Not_Track)
 - The `timeout` argument is on Seconds.
 - For Proxy support define a `OWM.proxy` or `AsyncOWM.proxy` of `Proxy` type.

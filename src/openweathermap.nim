@@ -108,28 +108,24 @@ type
   OWM* = OpenWeatherMapBase[HttpClient]           ## OpenWeatherMap  Sync Client.
   AsyncOWM* = OpenWeatherMapBase[AsyncHttpClient] ## OpenWeatherMap Async Client.
 
-proc owm_http_request(this: OWM | AsyncOWM, endpoint, http_method: string, accurate: bool ,
-                      use_json = true, metric = true, body = ""): Future[string] {.multisync.} =
+proc owm_http_request(this: OWM | AsyncOWM, endpoint: string, accurate: bool ,
+                      use_json = true, metric = true): Future[string] {.multisync.} =
   ## Base function for all OpenWeatherMap HTTPS GET/POST/PUT/DELETE API Calls.
-  assert http_method in ["GET", "POST", "PUT", "DELETE"], "HTTP Method must be a string of one of 'GET' or 'POST' or 'PUT' or 'DELETE'."
-  assert endpoint.strip.len > 4, "Invalid OpenWeatherMap HTTPS API Endpoint."
   assert this.lang in owm_ok_lang, "Invalid Unsupported OpenWeatherMap Language."
   let
     a = if use_json: "" else: "&mode=html"
     b = if accurate: "&type=accurate" else: "&type=like"
     c = if metric:   "&units=metric"  else: "&units=imperial"
     all_arg = a & b & c & "&lang=" & this.lang & "&APPID=" & this.api_key
-  var client =
-    when this is AsyncOWM: newAsyncHttpClient(
-      proxy = when declared(this.proxy): this.proxy else: nil)
-    else: newHttpClient(timeout = this.timeout * 1000,
-      proxy = when declared(this.proxy): this.proxy else: nil)
-  client.headers["DNT"] = "1"  # DoNotTrack.
-  let responses =
-    when this is AsyncOWM:
-      await client.request(url=owm_api_url & endpoint & all_arg, httpMethod=http_method, body=body)
-    else:
-      client.request(url=owm_api_url & endpoint & all_arg, httpMethod=http_method, body=body)
+    responses =
+      when this is AsyncOWM:
+        await newAsyncHttpClient(
+          proxy = when declared(this.proxy): this.proxy else: nil).request(
+            url=owm_api_url & endpoint & all_arg)
+      else:
+        newHttpClient(
+          timeout = this.timeout * 1000, proxy = when declared(this.proxy): this.proxy else: nil).request(
+            url=owm_api_url & endpoint & all_arg)
   result = await responses.body
 
 
@@ -139,35 +135,35 @@ proc owm_http_request(this: OWM | AsyncOWM, endpoint, http_method: string, accur
 proc get_current_cityname*(this: OSM | AsyncOSM, city_name: string, country_code = ""): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#name
   let countr = if country_code != "": "," & country_code else: ""
-  result = await owm_http_request(this, endpoint=fmt"weather?q={city_name}{countr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"weather?q={city_name}{countr}")
 
 proc get_current_cityid*(this: OSM | AsyncOSM, city_id: int): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#cityid
-  result = await owm_http_request(this, endpoint=fmt"weather?id={city_id}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"weather?id={city_id}")
 
 proc get_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#geo
-  result = await owm_http_request(this, endpoint=fmt"weather?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"weather?lat={lat}&lon={lon}")
 
 proc get_current_zipcode*(this: OSM | AsyncOSM, zip_code: int, country_code = ""): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#zip
   let countr = if country_code != "": "," & country_code else: ""
-  result = await owm_http_request(this, endpoint=fmt"weather?zip={zip_code}{countr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"weather?zip={zip_code}{countr}")
 
 proc get_current_bbox*(this: OSM | AsyncOSM, left, bottom, right, top, zoom: int8, cluster: bool): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#rectangle
   let clstr = if cluster: "yes" else: "no"
-  result = await owm_http_request(this, endpoint=fmt"box/city?bbox={left},{bottom},{right},{top},{zoom}&cluster={clstr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"box/city?bbox={left},{bottom},{right},{top},{zoom}&cluster={clstr}")
 
 proc get_current_circle*(this: OSM | AsyncOSM, lat, lon, cnt: int8, cluster: bool): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#cycle
   let clstr = if cluster: "yes" else: "no"
-  result = await owm_http_request(this, endpoint=fmt"find?lat={lat}&lon={lon}&cnt={cnt}&cluster={clstr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"find?lat={lat}&lon={lon}&cnt={cnt}&cluster={clstr}")
 
 proc get_current_groupid*(this: OSM | AsyncOSM, ids: seq[int]): Future[string] {.multisync.} =
   ## https://openweathermap.org/current#severalid
   let a = ids.join(",")
-  result = await owm_http_request(this, endpoint=fmt"group?id={a}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"group?id={a}")
 
 
 # 5 Day Forecast Weather.
@@ -176,20 +172,20 @@ proc get_current_groupid*(this: OSM | AsyncOSM, ids: seq[int]): Future[string] {
 proc get_5d_forecast_cityname*(this: OSM | AsyncOSM, city_name: string, country_code = ""): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#name5
   let countr = if country_code != "": "," & country_code else: ""
-  result = await owm_http_request(this, endpoint=fmt"forecast?q={city_name}{countr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"forecast?q={city_name}{countr}")
 
 proc get_5d_forecast_cityid*(this: OSM | AsyncOSM, city_id: int): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#cityid5
-  result = await owm_http_request(this, endpoint=fmt"forecast?id={city_id}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"forecast?id={city_id}")
 
 proc get_5d_forecast_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
-  result = await owm_http_request(this, endpoint=fmt"forecast?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"forecast?lat={lat}&lon={lon}")
 
 proc get_5d_forecast_zipcode*(this: OSM | AsyncOSM, zip_code: int, country_code = ""): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#zip
   let countr = if country_code != "": "," & country_code else: ""
-  result = await owm_http_request(this, endpoint=fmt"forecast?zip={zip_code}{countr}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"forecast?zip={zip_code}{countr}")
 
 
 # UV Light Index.
@@ -197,34 +193,35 @@ proc get_5d_forecast_zipcode*(this: OSM | AsyncOSM, zip_code: int, country_code 
 
 proc get_uv_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_uv_forecast_coordinates*(this: OSM | AsyncOSM, lat, lon, cnt: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
-  result = await owm_http_request(this, endpoint=fmt"uvi/forecast?lat={lat}&lon={lon}&cnt={cnt}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi/forecast?lat={lat}&lon={lon}&cnt={cnt}")
 
-# CO2 Pollution.
+
+# Air Pollution.
 
 
 proc get_co2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_o3_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_so2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_no2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 
 # Maps.
@@ -233,24 +230,24 @@ proc get_no2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[
 proc get_map_clouds*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_precipitation*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_pressure*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_wind*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_temp*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
   ## https://openweathermap.org/forecast5#geo5
   # {location}/{datetime}.json?appid={api_key}
-  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}", http_method="GET")
+  result = await owm_http_request(this, endpoint=fmt"uvi?lat={lat}&lon={lon}")
