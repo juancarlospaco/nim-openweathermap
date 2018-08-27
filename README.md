@@ -10,6 +10,14 @@
 - `nimble install openweathermap`
 
 
+# Use
+
+```nim
+import openweathermap
+# ? ? ?
+```
+
+
 # API
 
 - [Check the OpenWeatherMap Docs](https://openweathermap.org/api), the Lib is a 1:1 copy of the official Docs.
