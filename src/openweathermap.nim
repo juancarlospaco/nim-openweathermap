@@ -192,11 +192,11 @@ proc get_5d_forecast_zipcode*(this: OSM | AsyncOSM, zip_code: int, country_code 
 
 
 proc get_uv_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/uvi#current
   result = await owm_http_request(this, base_url=owm_api_url, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_uv_forecast_coordinates*(this: OSM | AsyncOSM, lat, lon, cnt: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/uvi#forecast
   result = await owm_http_request(this, base_url=owm_api_url, endpoint=fmt"uvi/forecast?lat={lat}&lon={lon}&cnt={cnt}")
 
 
@@ -204,22 +204,22 @@ proc get_uv_forecast_coordinates*(this: OSM | AsyncOSM, lat, lon, cnt: int8): Fu
 
 
 proc get_co2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/pollution/co
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_air, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_o3_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/pollution/o3
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_air, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_so2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/pollution/so2
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_air, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_no2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/pollution/no2
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_air, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
@@ -228,26 +228,26 @@ proc get_no2_current_coordinates*(this: OSM | AsyncOSM, lat, lon: int8): Future[
 
 
 proc get_map_clouds*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/weathermaps#clouds
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_precipitation*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/weathermaps#precip
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_pressure*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/weathermaps#pres
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_wind*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/weathermaps#wind
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
 
 proc get_map_temp*(this: OSM | AsyncOSM, lat, lon: int8): Future[string] {.multisync.} =
-  ## https://openweathermap.org/forecast5#geo5
+  ## https://openweathermap.org/api/weathermaps#temp
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
