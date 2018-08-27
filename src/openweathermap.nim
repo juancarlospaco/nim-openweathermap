@@ -18,7 +18,7 @@
 ## - No OS-specific code, so it should work on Linux, Windows and Mac. Not JS.
 ## - Run the module itself for an Example.
 
-import asyncdispatch, httpclient, strformat, strutils, xmldomparser, xmldom, uri, httpcore, base64, json, tables
+import asyncdispatch, httpclient, strformat, strutils, xmldomparser, xmldom, json, tables
 
 const
   owm_api_url* = "https://api.openweathermap.org/data/2.5/"     ## OpenWeatherMap HTTPS API URL for Weather.
