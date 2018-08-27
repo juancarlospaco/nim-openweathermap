@@ -256,7 +256,7 @@ proc get_map_temp*(this: OWM | AsyncOWM, lat, lon: float): Future[string] {.mult
 when is_main_module:
   echo owm_api_url
   # Sync OpenWeatherMap Client.
-  let owm_client = OWM(timeout: 9, lang: "en", api_key : "YOUR API KEY")
+  let owm_client = OWM(timeout: 9, lang: "en", api_key : "YOUR API KEY")  # FIXME Check all Arguments!!!.
   echo owm_client.get_current_cityname(city_name="montevideo", country_code="UY")
   echo owm_client.get_current_coordinates(lat=9.9, lon=99.99)
   # echo owm_client.get_current_zipcode(zip_code: int, country_code = "")  # FIXME find a zipcode.
@@ -276,11 +276,12 @@ when is_main_module:
   echo owm_client.get_map_pressure(lat=9.9, lon=9.9)
   echo owm_client.get_map_wind(lat=9.9, lon=9.9)
   echo owm_client.get_map_temp(lat=9.9, lon=9.9)
+
   # Async OpenWeatherMap Client.
   proc test {.async.} =
     let
       async_owm_client = AsyncOWM(timeout: 9, lang: "en", api_key : "YOUR API KEY")
       async_resp = await async_owm_client.get_current_cityname(city_name="montevideo", country_code="UY")
-  echo $async_resp
+    echo $async_resp
 
   waitFor(test())
