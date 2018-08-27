@@ -13,7 +13,7 @@
 # API
 
 - [Check the OpenWeatherMap Docs](https://openweathermap.org/api), the Lib is a 1:1 copy of the official Docs.
-- Each proc links to the official OSM API docs.
+- Each proc links to the official OWM API docs.
 - All procs should return an JSON Object `JsonNode`.
 - The naming of the procs follows the naming on the OWM Wiki.
 - The errors on the procs follows the errors on the OWM Wiki.
@@ -26,3 +26,35 @@
 - For Proxy support define a `OWM.proxy` or `AsyncOWM.proxy` of `Proxy` type.
 - No OS-specific code, so it should work on Linux, Windows and Mac. Not JS.
 - Run the module itself for an Example.
+
+
+# FAQ
+
+- This works without SSL ?.
+
+No.
+
+- This works with Asynchronous code ?.
+
+Yes.
+
+- This works with Synchronous code ?.
+
+Yes.
+
+- This requires API Key or Login ?.
+
+[Yes. A Free No-Cost API Key.](http://home.openweathermap.org/users/sign_up)
+
+- This requires Credit Card or Payments ?.
+
+No.
+
+- Can I use the OpenWeatherMap data ?.
+
+Yes.
+
+
+# Requisites
+
+- None.
