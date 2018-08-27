@@ -108,7 +108,7 @@ type
   OWM* = OpenWeatherMapBase[HttpClient]           ## OpenWeatherMap  Sync Client.
   AsyncOWM* = OpenWeatherMapBase[AsyncHttpClient] ## OpenWeatherMap Async Client.
 
-proc owm_http_request(this: OWM | AsyncOWM, base_url, endpoint: string, accurate: bool ,
+proc owm_http_request(this: OWM | AsyncOWM, base_url, endpoint: string, accurate = false,
                       use_json = true, metric = true): Future[string] {.multisync.} =
   ## Base function for all OpenWeatherMap HTTPS GET/POST/PUT/DELETE API Calls.
   assert this.lang in owm_ok_lang, "Invalid Unsupported OpenWeatherMap Language."
@@ -251,3 +251,36 @@ proc get_map_temp*(this: OWM | AsyncOWM, lat, lon: float): Future[string] {.mult
   ## https://openweathermap.org/api/weathermaps#temp
   # {location}/{datetime}.json?appid={api_key}
   result = await owm_http_request(this, base_url=owm_api_map, endpoint=fmt"uvi?lat={lat}&lon={lon}")
+
+
+when is_main_module:
+  echo owm_api_url
+  # Sync OpenWeatherMap Client.
+  let owm_client = OWM(timeout: 9, lang: "en", api_key : "YOUR API KEY")
+  echo owm_client.get_current_cityname(city_name="montevideo", country_code="UY")
+  echo owm_client.get_current_coordinates(lat=9.9, lon=99.99)
+  # echo owm_client.get_current_zipcode(zip_code: int, country_code = "")  # FIXME find a zipcode.
+  echo owm_client.get_current_bbox(left=9.9, bottom=9.9, right=-9.9, top=-9.9, zoom=9, cluster=true)
+  echo owm_client.get_current_circle(lat=9.9, lon=9.9, cnt=9, cluster=true)
+  echo owm_client.get_5d_forecast_cityname(city_name="Rosario", country_code="AR")
+  echo owm_client.get_5d_forecast_coordinates(lat=9.9, lon=9.9)
+  # echo owm_client.get_5d_forecast_zipcode(zip_code: int, country_code = "")  # FIXME find a zipcode.
+  echo owm_client.get_uv_current_coordinates(lat=9.9, lon=9.9)
+  echo owm_client.get_uv_forecast_coordinates(lat=9.9, lon=9.9, cnt=9)
+  echo owm_client.get_co2_current_coordinates(lat=9.9, lon=9.9)
+  echo owm_client.get_o3_current_coordinates(lat=9.9, lon=9.9)
+  echo owm_client.get_so2_current_coordinates(lat=9.9, lon=9.9)
+  echo owm_client.get_no2_current_coordinates(lat=9.9, lon=9.9)
+  echo owm_client.get_map_clouds(lat=9.9, lon=9.9)
+  echo owm_client.get_map_precipitation(lat=9.9, lon=9.9)
+  echo owm_client.get_map_pressure(lat=9.9, lon=9.9)
+  echo owm_client.get_map_wind(lat=9.9, lon=9.9)
+  echo owm_client.get_map_temp(lat=9.9, lon=9.9)
+  # Async OpenWeatherMap Client.
+  proc test {.async.} =
+    let
+      async_owm_client = AsyncOWM(timeout: 9, lang: "en", api_key : "YOUR API KEY")
+      async_resp = await async_owm_client.get_current_cityname(city_name="montevideo", country_code="UY")
+  echo $async_resp
+
+  waitFor(test())
