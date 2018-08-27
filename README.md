@@ -38,7 +38,7 @@ import openweathermap
 
 # Support
 
-All the Free tier is covered, including Maps & Air Pollution, except this endpoint: https://openweathermap.org/triggers
+All the Free tier is covered, including [Maps](https://openweathermap.org/api/weathermaps) & [Air Pollution](https://openweathermap.org/api/pollution/co), [except alerts endpoint.](https://openweathermap.org/triggers)
 
 
 # FAQ
