@@ -36,6 +36,11 @@ import openweathermap
 - Run the module itself for an Example.
 
 
+# Support
+
+All the Free tier is covered, including Maps & Air Pollution, except this endpoint: https://openweathermap.org/triggers
+
+
 # FAQ
 
 - This works without SSL ?.
