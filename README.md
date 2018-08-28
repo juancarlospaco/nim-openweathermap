@@ -58,7 +58,7 @@ waitFor test()
 
 # Support
 
-All the Free tier is covered, including [Maps](https://openweathermap.org/api/weathermaps) & [Air Pollution](https://openweathermap.org/api/pollution/co), [except alerts endpoint.](https://openweathermap.org/triggers)
+All the Free tier is covered, including [Air Pollution](https://openweathermap.org/api/pollution/co), [except Alerts endpoint](https://openweathermap.org/triggers) & [PNG Image Maps](https://openweathermap.org/api/weathermaps).
 
 
 # FAQ
