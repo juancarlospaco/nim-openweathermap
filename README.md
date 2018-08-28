@@ -1,6 +1,6 @@
 # Nim-OpenWeatherMap
 
-[OpenWeatherMap](https://openweathermap.org) API Lib for [Nim](https://nim-lang.org), Free world wide [Creative Commons](http://creativecommons.org/licenses/by-sa/4.0) & [Open Data](http://opendatacommons.org/licenses/odbl) Licensed Weather [data](https://openweathermap.org/city) & [maps](https://owm.io/beautiful_maps).
+[OpenWeatherMap](https://openweathermap.org) API Lib for [Nim](https://nim-lang.org), Free world wide [Creative Commons](http://creativecommons.org/licenses/by-sa/4.0) & [Open Data](http://opendatacommons.org/licenses/odbl) Licensed Weather [data](https://openweathermap.org/city).
 
 ![OpenWeatherMap](https://raw.githubusercontent.com/juancarlospaco/nim-openweathermap/master/owm.jpg "OpenWeatherMap")
 
@@ -16,7 +16,7 @@
 import openweathermap
 
 # Sync OpenWeatherMap Client.
-let owm_client = OWM(timeout: 9, lang: "en", api_key : "YOUR FREE API KEY HERE")
+let owm_client = OWM(timeout: 9, lang: "en", api_key: "YOUR FREE API KEY HERE")
 echo owm_client.get_current_cityname(city_name="montevideo", country_code="UY", accurate=true, metric=false)
 echo owm_client.get_current_coordinates(lat=9.9, lon=99.99, accurate=false, metric=false)
 echo owm_client.get_current_zipcode(zip_code=2804, country_code="AR", accurate=true, metric=false)
@@ -32,7 +32,7 @@ echo owm_client.get_no2_current_coordinates(lat=77.0, lon=77.0)      # NO2 Air P
 # Async OpenWeatherMap Client.
 proc test {.async.} =
   let
-    async_owm_client = AsyncOWM(timeout: 9, lang: "en", api_key : "YOUR FREE API KEY HERE")
+    async_owm_client = AsyncOWM(timeout: 9, lang: "en", api_key: "YOUR FREE API KEY HERE")
     async_resp = await async_owm_client.get_current_cityname(city_name="montevideo", country_code="UY")
   echo $async_resp
 waitFor test()

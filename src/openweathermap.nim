@@ -1,7 +1,7 @@
 ## Nim-OpenWeatherMap
 ## ==================
 ##
-## OpenWeatherMap API Lib for Nim, Free world wide Creative Commons & Open Data Licensed Weather data & maps.
+## OpenWeatherMap API Lib for Nim, Free world wide Creative Commons & Open Data Licensed Weather data.
 ##
 ## - Check the OpenWeatherMap Docs, the Lib is a 1:1 copy of the official Docs.
 ## - Each proc links to the official OWM API docs.
